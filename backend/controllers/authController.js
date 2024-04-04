@@ -1,6 +1,6 @@
 const { db } = require("../app");
 const { hashPassword, comparePassword } = require("../utils/passwordUtils");
-const bcrypt = require("bcrypt");
+const sendTokenResponse = require("../utils/jsonwebtoken");
 
 exports.registerUser = async (req, res, next) => {
   const { name, email, password } = req.body;
@@ -18,10 +18,7 @@ exports.registerUser = async (req, res, next) => {
         message: err,
       });
     } else {
-      res.status(200).json({
-        status: "Success",
-        data,
-      });
+      sendTokenResponse({ user: data.insertId }, 201, res);
     }
   });
 };
@@ -50,15 +47,7 @@ exports.loginUser = async (req, res, next) => {
         } else {
           const user = data[0];
           if (comparePassword(password, user.PASSWORD)) {
-            res.status(200).json({
-              status: "Success",
-              message: "Login successful",
-              user: {
-                id: user.ID,
-                name: user.NAME,
-                email: user.EMAIL,
-              },
-            });
+            sendTokenResponse({ user: user.ID }, 200, res);
           } else {
             res.status(401).json({
               error: "Unauthorized",

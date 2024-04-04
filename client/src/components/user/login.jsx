@@ -18,7 +18,7 @@ export default function Login() {
     e.preventDefault();
 
     axios
-      .post("http://localhost:8081/api/v1/student/login", values)
+      .post("http://localhost:8080/api/v1/student/login", values)
       .then((res) => {
         if (res.data.status === "Success") {
           navigate("/dashboard");

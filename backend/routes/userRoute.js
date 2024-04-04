@@ -6,7 +6,7 @@ const {
   getDashboard,
   registerUser,
 } = require("../controllers/authController");
-const { requireAuth } = require("../middleware/requireAuth");
+// const { requireAuth } = require("../middleware/requireAuth");
 
 router.post("/student/signup", registerUser);
 router.post("/student/login", loginUser);
