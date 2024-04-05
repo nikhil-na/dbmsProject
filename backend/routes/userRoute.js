@@ -15,6 +15,15 @@ const {
   editExpense,
 } = require("../controllers/expenseController");
 
+const {
+  newIncome,
+  getAllIncome,
+  getOneIncome,
+  deleteIncome,
+  editIncome,
+  getAllIncomes,
+} = require("../controllers/incomeController");
+
 const requireAuth = require("../middleware/requireAuth");
 
 router.post("/student/signup", registerUser);
@@ -27,5 +36,11 @@ router.get("/expenses", requireAuth, getAllExpenses);
 router.get("/expenses/:id", requireAuth, getOneExpense);
 router.delete("/expenses/:id", requireAuth, deleteExpense);
 router.put("/expenses/:id", requireAuth, editExpense);
+
+router.post("/income/new", requireAuth, newIncome);
+router.get("/income", requireAuth, getAllIncomes);
+router.get("/income/:id", requireAuth, getOneIncome);
+router.delete("/income/:id", requireAuth, deleteIncome);
+router.put("/income/:id", requireAuth, editIncome);
 
 module.exports = router;
