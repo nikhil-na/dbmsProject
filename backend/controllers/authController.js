@@ -18,7 +18,7 @@ exports.registerUser = async (req, res, next) => {
         message: err,
       });
     } else {
-      sendTokenResponse({ user: data.insertId }, 201, res);
+      sendTokenResponse({ user }, 201, res);
     }
   });
 };
@@ -47,7 +47,7 @@ exports.loginUser = async (req, res, next) => {
         } else {
           const user = data[0];
           if (comparePassword(password, user.PASSWORD)) {
-            sendTokenResponse({ user: user.ID }, 200, res);
+            sendTokenResponse({ user }, 200, res);
           } else {
             res.status(401).json({
               error: "Unauthorized",
@@ -72,7 +72,7 @@ exports.logoutUser = (req, res, next) => {
     status: "Success",
     message: "User logged out",
   });
-}
+};
 
 exports.getDashboard = (req, res, next) => {
   res.status(200).json({

@@ -7,7 +7,6 @@ const requireAuth = (req, res, next) => {
     res.status(200).json({
       success_jwt: false,
       message: "Login first",
-      testmsg: "this is test message",
     });
   } else {
     try {

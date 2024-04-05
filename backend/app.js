@@ -17,6 +17,7 @@ app.use(
 );
 app.use(cookieParser());
 
+// mysql connection
 const db = mysql.createConnection({
   host: process.env.DB_HOST,
   user: process.env.DB_USER,
@@ -29,13 +30,27 @@ db.connect((err) => {
     console.error("Error connecting to database:", err);
     return;
   }
-  console.log("Connected to database successfully!");
+  console.log("Connected to sql database successfully!");
 });
 
 module.exports = { db };
 
-const userRoutes = require("./routes/userRoute");
+// mongodb connection
+const mongoose = require("mongoose");
 
+const MONGO_URI = process.env.MONGO_URI;
+
+mongoose
+  .connect(MONGO_URI)
+  .then((x) => {
+    console.log("Connected to mongo DB!");
+  })
+  .catch((err) => {
+    console.error("Error connecting to the database", err);
+  });
+
+// routes
+const userRoutes = require("./routes/userRoute");
 app.use("/api/v1", userRoutes);
 
 const server = app.listen(8080, () => {

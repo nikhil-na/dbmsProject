@@ -7,7 +7,8 @@ const createJwt = (userId, email) => {
 };
 
 const sendTokenResponse = (user, statusCode, res) => {
-  const token = createJwt(user.id, user.email);
+  const token = createJwt(user.user.USER_ID, user.user.EMAIL);
+  console.log(user.user.USER_ID, user.user.EMAIL);
 
   const options = {
     expiresIn: process.env.JWT_COOKIE_EXPIRE_TIME * 24 * 60 * 60 * 1000,
