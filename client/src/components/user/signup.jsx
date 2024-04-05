@@ -27,7 +27,7 @@ export default function Signup() {
       .post("http://localhost:8080/api/v1/student/signup", values)
       .then((res) => {
         if (res.data.status === "Success") {
-          navigate("/");
+          navigate("/dashboard");
         } else {
           console.log("Error");
         }
@@ -165,7 +165,7 @@ export default function Signup() {
           <p class="mt-10  text-center text-sm text-white-500">
             Already a registered member?
             <Link
-              to="/login"
+              to="/student/login"
               class="font-semibold leading-6 text-indigo-600 hover:text-indigo-500"
             >
               {" "}

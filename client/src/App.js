@@ -1,4 +1,4 @@
-import { BrowserRouter, Routes, Route } from "react-router-dom";
+import { BrowserRouter, Routes, Route, Navigate } from "react-router-dom";
 
 import LandingPage from "./components/landingPage";
 import Login from "./components/user/login";
@@ -11,7 +11,7 @@ export default function App() {
       <Routes>
         <Route path="/" element={<LandingPage />} />
         <Route path="/dashboard" element={<Dashboard />} />
-        <Route path="/login" element={<Login />} />
+        <Route path="/student/login" element={<Login />} />
         <Route path="/student/signup" element={<Signup />} />
       </Routes>
     </BrowserRouter>

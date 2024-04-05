@@ -1,0 +1,27 @@
+const jwt = require("jsonwebtoken");
+
+const requireAuth = (req, res, next) => {
+  const { jwtoken } = req.cookies;
+
+  if (!jwtoken) {
+    res.status(200).json({
+      success_jwt: false,
+      message: "Login first",
+      testmsg: "this is test message",
+    });
+  } else {
+    try {
+      const decoded = jwt.verify(jwtoken, process.env.JWT_SECRET);
+      req.user = decoded;
+      next();
+    } catch (error) {
+      // Handle JWT verification errors
+      return res.status(401).json({
+        success_jwt: false,
+        message: "Invalid or expired token",
+      });
+    }
+  }
+};
+
+module.exports = requireAuth;

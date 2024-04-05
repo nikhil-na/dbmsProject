@@ -65,8 +65,18 @@ exports.loginUser = async (req, res, next) => {
   }
 };
 
+exports.logoutUser = (req, res, next) => {
+  res.clearCookie("jwtoken");
+
+  res.status(200).json({
+    status: "Success",
+    message: "User logged out",
+  });
+}
+
 exports.getDashboard = (req, res, next) => {
   res.status(200).json({
+    success_jwt: true,
     status: "Success",
     message: "Welcome to the dashboard!",
     user: req.user, // Assuming req.user contains the authenticated user's information
