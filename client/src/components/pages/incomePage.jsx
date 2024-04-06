@@ -1,5 +1,4 @@
 import React, { useState, useEffect } from "react";
-import ExpenseForm from "../forms/expenseForm";
 import NavbarDash from "./navDash";
 import axios from "axios";
 
@@ -11,9 +10,10 @@ function IncomePageList() {
   const [description, setDescription] = useState("");
   const [editIncomeId, setEditIncomeId] = useState(null);
   const [isEditing, setIsEditing] = useState(false);
+  const [deleteIncomeId, setDeleteIncomeId] = useState(null);
 
   useEffect(() => {
-    // Fetch expense data from the backend when the component mounts
+    // Fetch income data from the backend when the component mounts
     fetchIncomes();
   }, []);
 
@@ -77,18 +77,33 @@ function IncomePageList() {
     }
   };
 
+  const deleteIncome = async (deleteIncomeId) => {
+    const authtoken = localStorage.getItem("authtoken");
+
+    await axios.delete(
+      `http://localhost:8080/api/v1/income/${deleteIncomeId}`,
+      {
+        headers: {
+          Authorization: `Bearer ${authtoken}`,
+        },
+      }
+    );
+
+    fetchIncomes();
+  };
+
   // Function to handle submitting the income form
   const handleSubmit = async (e) => {
     e.preventDefault();
     handleSaveIncome();
   };
 
-  // Function to handle canceling the expense form
+  // Function to handle canceling the income form
   const handleCancel = () => {
-    setShowIncomeForm(false); // Hide the expense form when canceled
+    setShowIncomeForm(false); // Hide the income form when canceled
   };
 
-  // Function to handle editing an expense
+  // Function to handle editing an Income
   const handleEdit = async (incomeId) => {
     const incomeToEdit = incomeList.find((income) => income._id === incomeId);
     if (incomeToEdit) {
@@ -96,12 +111,21 @@ function IncomePageList() {
       setAmount(incomeToEdit.amount);
       setDescription(incomeToEdit.description);
       setIsEditing(true);
-      setEditIncomeId(incomeId); // Set the id of the expense being edited
+      setEditIncomeId(incomeId); // Set the id of the income being edited
       setShowIncomeForm(!showIncomeForm);
     }
   };
 
-  // Function to toggle the expense form visibility
+  // Function to handle deleting an Income
+  const handleDelete = (incomeId) => {
+    const incomeToDelete = incomeList.find((income) => income._id === incomeId);
+    if (incomeToDelete) {
+      setDeleteIncomeId(incomeId);
+      deleteIncome(incomeId);
+    }
+  };
+
+  // Function to toggle the income form visibility
   const toggleIncomeForm = () => {
     setShowIncomeForm(!showIncomeForm);
   };
@@ -145,7 +169,10 @@ function IncomePageList() {
                       >
                         Edit
                       </button>
-                      <button className="bg-red-500 hover:bg-red-700 text-white font-bold py-1 px-2 rounded">
+                      <button
+                        onClick={() => handleDelete(income._id)}
+                        className="bg-red-500 hover:bg-red-700 text-white font-bold py-1 px-2 rounded"
+                      >
                         Delete
                       </button>
                     </td>
@@ -161,7 +188,7 @@ function IncomePageList() {
             </tbody>
           </table>
         </div>
-        {/* Render the add expense form if showExpenseForm is true */}
+        {/* Render the add income form if showExpenseForm is true */}
         {showIncomeForm && (
           <div className="max-w-md mx-auto bg-white shadow-md rounded px-8 pt-6 pb-8 mb-4">
             <h2 className="text-2xl font-bold text-center mb-4">

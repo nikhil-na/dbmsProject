@@ -80,7 +80,7 @@ exports.editIncome = async (req, res, next) => {
 // DELETE route to delete an Income
 // DELETE /api/v1/incomes/:id
 exports.deleteIncome = async (req, res, next) => {
-  Income.findOneAndDelete({ userId: req.params.id })
+  Income.findOneAndDelete({ _id: req.params.id })
     .then((Income) => {
       if (!Income) {
         res.status(404).json({ success: false, message: "Income not found" });
