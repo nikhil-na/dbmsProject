@@ -10,6 +10,7 @@ function ExpenseListPage() {
   const [description, setDescription] = useState("");
   const [editExpenseId, setEditExpenseId] = useState(null);
   const [isEditing, setIsEditing] = useState(false);
+  const [deleteExpenseId, setDeleteExpenseId] = useState(null);
 
   useEffect(() => {
     // Fetch expense data from the backend when the component mounts
@@ -80,6 +81,21 @@ function ExpenseListPage() {
     }
   };
 
+  const deleteExpense = async (deleteExpenseId) => {
+    const authtoken = localStorage.getItem("authtoken");
+
+    await axios.delete(
+      `http://localhost:8080/api/v1/expenses/${deleteExpenseId}`,
+      {
+        headers: {
+          Authorization: `Bearer ${authtoken}`,
+        },
+      }
+    );
+
+    fetchExpenses();
+  };
+
   // Function to handle submitting the expense form
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -103,6 +119,17 @@ function ExpenseListPage() {
       setIsEditing(true);
       setEditExpenseId(expenseId); // Set the id of the expense being edited
       setShowExpenseForm(!showExpenseForm);
+    }
+  };
+
+  // Function to handle deleting an expense
+  const handleDelete = (expenseId) => {
+    const expenseToDelete = expenseList.find(
+      (expense) => expense._id === expenseId
+    );
+    if (expenseToDelete) {
+      setDeleteExpenseId(expenseId);
+      deleteExpense(expenseId);
     }
   };
 
@@ -151,7 +178,12 @@ function ExpenseListPage() {
                         Edit
                       </button>
 
-                      <button className="bg-red-500 hover:bg-red-700 text-white font-bold py-1 px-2 rounded">
+                      <button
+                        onClick={() => {
+                          handleDelete(expense._id);
+                        }}
+                        className="bg-red-500 hover:bg-red-700 text-white font-bold py-1 px-2 rounded"
+                      >
                         Delete
                       </button>
                     </td>

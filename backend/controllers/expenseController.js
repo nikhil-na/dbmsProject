@@ -79,7 +79,7 @@ exports.editExpense = async (req, res, next) => {
 // DELETE route to delete an expense
 // DELETE /api/v1/expenses/:id
 exports.deleteExpense = async (req, res, next) => {
-  Expense.findOneAndDelete({ userId: req.params.id })
+  Expense.findOneAndDelete({ _id: req.params.id })
     .then((expense) => {
       if (!expense) {
         res.status(404).json({ success: false, message: "Expense not found" });
