@@ -17,7 +17,6 @@ const {
 
 const {
   newIncome,
-  getAllIncome,
   getOneIncome,
   deleteIncome,
   editIncome,

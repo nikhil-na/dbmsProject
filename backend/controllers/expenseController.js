@@ -5,7 +5,6 @@ const Expense = require("./../models/expenseModel.js");
 // GET route to fetch all expenses
 // GET /api/v1/expenses
 exports.getAllExpenses = (req, res, next) => {
-  console.log(req.user);
   const userId = req.user.userId;
   Expense.find({ userId })
     .then((expenses) =>
@@ -25,8 +24,6 @@ exports.newExpense = (req, res, next) => {
   const { category, amount, description } = req.body;
   // Get user ID from request payload
   const userId = req.user.userId;
-
-  console.log(category, amount, description);
 
   Expense.create({ userId, category, amount, description })
     .then((expense) =>
