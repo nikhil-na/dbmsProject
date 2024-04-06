@@ -18,6 +18,11 @@ exports.registerUser = async (req, res, next) => {
         message: err,
       });
     } else {
+      const user = {
+        USER_ID: data.insertId,
+        NAME: name,
+        EMAIL: email,
+      };
       sendTokenResponse({ user }, 201, res);
     }
   });

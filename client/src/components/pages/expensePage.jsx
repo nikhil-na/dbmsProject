@@ -1,5 +1,4 @@
 import React, { useState, useEffect } from "react";
-import ExpenseForm from "../forms/expenseForm";
 import NavbarDash from "./navDash";
 import axios from "axios";
 
@@ -9,6 +8,8 @@ function ExpenseListPage() {
   const [category, setCategory] = useState("");
   const [amount, setAmount] = useState("");
   const [description, setDescription] = useState("");
+  const [editExpenseId, setEditExpenseId] = useState(null);
+  const [isEditing, setIsEditing] = useState(false);
 
   useEffect(() => {
     // Fetch expense data from the backend when the component mounts
@@ -32,49 +33,57 @@ function ExpenseListPage() {
     }
   };
 
-  // Function to handle adding a new expense
-  const handleAddExpense = async (newExpense) => {
+  // Function to handle adding a new expense or updating an existing one
+  const handleSaveExpense = async () => {
     const authtoken = localStorage.getItem("authtoken");
-    console.log(authtoken);
-    try {
-      const response = await axios.post(
-        "http://localhost:8080/api/v1/expenses/new",
-        newExpense,
-        {
-          headers: {
-            // 'Content-Type': 'application/json',
-            Authorization: `Bearer ${authtoken}`,
-          },
-        }
-      );
-      fetchExpenses(); // Fetch updated expense list after adding the expense
-    } catch (error) {
-      console.error("Failed to add expense", error);
-    }
-  };
-
-  // Function to handle submitting the expense form
-  const handleSubmit = async (e) => {
-    e.preventDefault();
-
-    // Create expense object
-    const newExpense = {
+    const expenseData = {
       category,
       amount,
       description,
     };
 
     try {
-      handleAddExpense(newExpense);
+      if (editExpenseId) {
+        // Update existing expense
+        await axios.put(
+          `http://localhost:8080/api/v1/expenses/${editExpenseId}`,
+          expenseData,
+          {
+            headers: {
+              Authorization: `Bearer ${authtoken}`,
+            },
+          }
+        );
+        setIsEditing(false);
+      } else {
+        // Add new expense
+        await axios.post(
+          "http://localhost:8080/api/v1/expenses/new",
+          expenseData,
+          {
+            headers: {
+              Authorization: `Bearer ${authtoken}`,
+            },
+          }
+        );
+      }
 
+      // Fetch updated expense list after adding or updating the expense
+      fetchExpenses();
       // Reset form fields
       setCategory("");
       setAmount("");
       setDescription("");
       setShowExpenseForm(false); // Hide the expense form after submitting
     } catch (error) {
-      console.error("Failed to add expense", error);
+      console.error("Failed to save expense", error);
     }
+  };
+
+  // Function to handle submitting the expense form
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+    handleSaveExpense();
   };
 
   // Function to handle canceling the expense form
@@ -82,10 +91,29 @@ function ExpenseListPage() {
     setShowExpenseForm(false); // Hide the expense form when canceled
   };
 
+  // Function to handle editing an expense
+  const handleEdit = async (expenseId) => {
+    const expenseToEdit = expenseList.find(
+      (expense) => expense._id === expenseId
+    );
+    if (expenseToEdit) {
+      setCategory(expenseToEdit.category);
+      setAmount(expenseToEdit.amount);
+      setDescription(expenseToEdit.description);
+      setIsEditing(true);
+      setEditExpenseId(expenseId); // Set the id of the expense being edited
+      setShowExpenseForm(true); // Show the expense form in edit mode
+      setShowExpenseForm(!showExpenseForm);
+    }
+  };
+
   // Function to toggle the expense form visibility
   const toggleExpenseForm = () => {
     setShowExpenseForm(!showExpenseForm);
+    setEditExpenseId(null);
   };
+
+  console.log(expenseList);
 
   return (
     <div className="h-screen">
@@ -120,9 +148,13 @@ function ExpenseListPage() {
                     <td className="border px-4 py-2">{expense.amount}</td>
                     <td className="border px-4 py-2">{expense.description}</td>
                     <td className="border px-4 py-2">
-                      <button className="bg-green-500 hover:bg-green-700 text-white font-bold py-1 px-2 rounded mr-2">
+                      <button
+                        onClick={() => handleEdit(expense._id)}
+                        className="bg-green-500 hover:bg-green-700 text-white font-bold py-1 px-2 rounded mr-2"
+                      >
                         Edit
                       </button>
+
                       <button className="bg-red-500 hover:bg-red-700 text-white font-bold py-1 px-2 rounded">
                         Delete
                       </button>
@@ -141,9 +173,9 @@ function ExpenseListPage() {
         </div>
         {/* Render the add expense form if showExpenseForm is true */}
         {showExpenseForm && (
-          <div className="max-w-md mx-auto bg-white shadow-md rounded px-8 pt-6 pb-8 mb-4">
+          <div className="max-w-md mx-auto bg-white shadow-md rounded px-8 pt-6 pb-8 mt-4 mb-4">
             <h2 className="text-2xl font-bold text-center mb-4">
-              Add New Expense
+              {isEditing ? "Edit expense" : "Add new expense"}
             </h2>
             <form onSubmit={handleSubmit}>
               <div className="mb-4">
@@ -198,7 +230,7 @@ function ExpenseListPage() {
                   type="submit"
                   className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline"
                 >
-                  Submit
+                  {isEditing ? "Save" : "Submit"}
                 </button>
                 <button
                   type="button"

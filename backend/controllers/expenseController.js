@@ -5,8 +5,12 @@ const Expense = require("./../models/expenseModel.js");
 // GET route to fetch all expenses
 // GET /api/v1/expenses
 exports.getAllExpenses = (req, res, next) => {
-  Expense.find()
-    .then((expenses) => res.status(200).json({ success: true, expenses }))
+  console.log(req.user);
+  const userId = req.user.userId;
+  Expense.find({ userId })
+    .then((expenses) =>
+      res.status(200).json({ userId, success: true, expenses })
+    )
     .catch((err) => {
       console.error(err);
       res
@@ -58,7 +62,7 @@ exports.getOneExpense = async (req, res, next) => {
 // PUT /api/v1/expenses/:id
 
 exports.editExpense = async (req, res, next) => {
-  Expense.findOneAndUpdate({ userId: req.params.id }, req.body, {
+  Expense.findOneAndUpdate({ _id: req.params.id }, req.body, {
     new: true,
     runValidators: true,
     useFindAndModify: false,
