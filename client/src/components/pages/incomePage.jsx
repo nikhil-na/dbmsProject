@@ -9,6 +9,8 @@ function IncomePageList() {
   const [category, setCategory] = useState("");
   const [amount, setAmount] = useState("");
   const [description, setDescription] = useState("");
+  const [editIncomeId, setEditIncomeId] = useState(null);
+  const [isEditing, setIsEditing] = useState(false);
 
   useEffect(() => {
     // Fetch expense data from the backend when the component mounts
@@ -23,60 +25,80 @@ function IncomePageList() {
           Authorization: `Bearer ${authtoken}`,
         },
       });
-      setIncomeList(response.data.income);
+      setIncomeList(response.data.Incomes);
     } catch (error) {
       console.error("Failed to fetch income", error);
     }
   };
 
-  // Function to handle adding a new income
-  const handleAddIncome = async (newExpense) => {
+  const handleSaveIncome = async () => {
     const authtoken = localStorage.getItem("authtoken");
-    console.log(authtoken);
-    try {
-      const response = await axios.post(
-        "http://localhost:8080/api/v1/income/new",
-        newExpense,
-        {
-          headers: {
-            // 'Content-Type': 'application/json',
-            Authorization: `Bearer ${authtoken}`,
-          },
-        }
-      );
-      fetchIncomes(); // Fetch updated income list after adding the expense
-    } catch (error) {
-      console.error("Failed to add income", error);
-    }
-  };
-
-  // Function to handle submitting the expense form
-  const handleSubmit = async (e) => {
-    e.preventDefault();
-
-    // Create expense object
-    const newExpense = {
+    const incomeData = {
       category,
       amount,
       description,
     };
 
     try {
-      handleAddIncome(newExpense);
+      if (editIncomeId) {
+        // Update existing income
+        await axios.put(
+          `http://localhost:8080/api/v1/income/${editIncomeId}`,
+          incomeData,
+          {
+            headers: {
+              Authorization: `Bearer ${authtoken}`,
+            },
+          }
+        );
+        setIsEditing(false);
+      } else {
+        // Add new income
+        await axios.post(
+          "http://localhost:8080/api/v1/income/new",
+          incomeData,
+          {
+            headers: {
+              Authorization: `Bearer ${authtoken}`,
+            },
+          }
+        );
+      }
 
+      // Fetch updated income list after adding or updating the income
+      fetchIncomes();
       // Reset form fields
       setCategory("");
       setAmount("");
       setDescription("");
       setShowIncomeForm(false); // Hide the income form after submitting
     } catch (error) {
-      console.error("Failed to add income", error);
+      console.error("Failed to save income", error);
     }
+  };
+
+  // Function to handle submitting the income form
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+    handleSaveIncome();
   };
 
   // Function to handle canceling the expense form
   const handleCancel = () => {
     setShowIncomeForm(false); // Hide the expense form when canceled
+  };
+
+  // Function to handle editing an expense
+  const handleEdit = async (incomeId) => {
+    const incomeToEdit = incomeList.find((income) => income._id === incomeId);
+    if (incomeToEdit) {
+      setCategory(incomeToEdit.category);
+      setAmount(incomeToEdit.amount);
+      setDescription(incomeToEdit.description);
+      setIsEditing(true);
+      setEditIncomeId(incomeId); // Set the id of the expense being edited
+      setShowIncomeForm(!showIncomeForm);
+    }
   };
 
   // Function to toggle the expense form visibility
@@ -117,7 +139,10 @@ function IncomePageList() {
                     <td className="border px-4 py-2">{income.amount}</td>
                     <td className="border px-4 py-2">{income.description}</td>
                     <td className="border px-4 py-2">
-                      <button className="bg-green-500 hover:bg-green-700 text-white font-bold py-1 px-2 rounded mr-2">
+                      <button
+                        onClick={() => handleEdit(income._id)}
+                        className="bg-green-500 hover:bg-green-700 text-white font-bold py-1 px-2 rounded mr-2"
+                      >
                         Edit
                       </button>
                       <button className="bg-red-500 hover:bg-red-700 text-white font-bold py-1 px-2 rounded">
@@ -140,7 +165,7 @@ function IncomePageList() {
         {showIncomeForm && (
           <div className="max-w-md mx-auto bg-white shadow-md rounded px-8 pt-6 pb-8 mb-4">
             <h2 className="text-2xl font-bold text-center mb-4">
-              Add New Income
+              {isEditing ? "Edit Income" : "Add New Income"}
             </h2>
             <form onSubmit={handleSubmit}>
               <div className="mb-4">
@@ -195,7 +220,7 @@ function IncomePageList() {
                   type="submit"
                   className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline"
                 >
-                  Submit
+                  {isEditing ? "Save" : "Submit"}
                 </button>
                 <button
                   type="button"

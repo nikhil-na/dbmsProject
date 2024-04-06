@@ -5,8 +5,12 @@ const Income = require("./../models/IncomeModel.js");
 // GET route to fetch all Incomes
 // GET /api/v1/incomes
 exports.getAllIncomes = (req, res, next) => {
-  Income.find()
-    .then((Incomes) => res.status(200).json({ success: true, Incomes }))
+  const userId = req.user.userId;
+  Income.find({ userId })
+    .then((Incomes) => {
+      console.log(Incomes);
+      res.status(200).json({ userId, success: true, Incomes });
+    })
     .catch((err) => {
       console.error(err);
       res
@@ -56,7 +60,7 @@ exports.getOneIncome = async (req, res, next) => {
 // PUT /api/v1/incomes/:id
 
 exports.editIncome = async (req, res, next) => {
-  Income.findOneAndUpdate({ userId: req.params.id }, req.body, {
+  Income.findOneAndUpdate({ _id: req.params.id }, req.body, {
     new: true,
     runValidators: true,
     useFindAndModify: false,
