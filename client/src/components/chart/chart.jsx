@@ -116,7 +116,7 @@ function ChartJs() {
   return (
     <div className="container mx-auto">
       <h1 className="mb-10 mt-10 text-center text-3xl font-bold">
-        Welcome to your Dashboard, nikhil!
+        Welcome to your Dashboard!
       </h1>
 
       <div className="flex justify-center mt-5">
