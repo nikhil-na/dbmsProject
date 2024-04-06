@@ -4,6 +4,7 @@ import React, { useEffect, useState } from "react";
 import axios from "axios";
 import { useNavigate } from "react-router";
 import NavbarDash from "./pages/navDash";
+import ChartJs from "./chart/chart";
 
 function Dashboard() {
   const navigate = useNavigate();
@@ -39,19 +40,14 @@ function Dashboard() {
     checkAuth();
   }, []);
 
-  console.log(isloading);
-
   return (
     <div>
       {isloading && <h1>.</h1>}
-
       {!isloading && (
-        <div>
+        <div className="mx-auto px-4 sm:px-6 lg:px-8">
           {" "}
           <NavbarDash />
-          <div className="h-screen bg-slate-100 flex flex-col items-center">
-            <h1 className="text-3xl mt-5 font-bold mb-4">Welcome, Nikhil</h1>
-          </div>
+          <ChartJs />
         </div>
       )}
     </div>

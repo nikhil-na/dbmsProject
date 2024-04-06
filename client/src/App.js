@@ -8,6 +8,7 @@ import ExpenseForm from "./components/forms/expenseForm";
 import IncomeForm from "./components/forms/incomeForm";
 import ExpenseListPage from "./components/pages/expensePage";
 import IncomeListPage from "./components/pages/incomePage";
+import ChartJs from "./components/chart/chart";
 
 export default function App() {
   return (
@@ -15,6 +16,7 @@ export default function App() {
       <Routes>
         <Route path="/" element={<LandingPage />} />
         <Route path="/dashboard" element={<Dashboard />} />
+        <Route path="/chart" element={<ChartJs />} />
         <Route path="/student/login" element={<Login />} />
         <Route path="/student/signup" element={<Signup />} />
         <Route path="/expense/new" element={<ExpenseForm />} />
