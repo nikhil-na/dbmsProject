@@ -21,6 +21,7 @@ export default function Login() {
       .post("http://localhost:8080/api/v1/student/login", values)
       .then((res) => {
         if (res.data.status === "Success") {
+          localStorage.setItem("authtoken", res.data.token);
           navigate("/dashboard");
         } else {
           console.log("Error");

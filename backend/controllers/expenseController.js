@@ -22,6 +22,8 @@ exports.newExpense = (req, res, next) => {
   // Get user ID from request payload
   const userId = req.user.userId;
 
+  console.log(category, amount, description);
+
   Expense.create({ userId, category, amount, description })
     .then((expense) =>
       res.status(201).json({

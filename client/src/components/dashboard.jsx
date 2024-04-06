@@ -3,6 +3,7 @@
 import React, { useEffect, useState } from "react";
 import axios from "axios";
 import { useNavigate } from "react-router";
+import NavbarDash from "./pages/navDash";
 
 function Dashboard() {
   const navigate = useNavigate();
@@ -10,34 +11,25 @@ function Dashboard() {
   const [isloading, setIsLoading] = useState(true);
 
   axios.defaults.withCredentials = true;
-
-  const handleLogout = () => {
-    axios
-      .get("http://localhost:8080/api/v1/logout")
-      .then((res) => {
-        navigate("/student/login");
-      })
-      .catch((err) => console.log(err));
-  };
-
   const checkAuth = () => {
+    const authtoken = localStorage.getItem("authtoken");
     axios
-      .get("http://localhost:8080/api/v1/dashboard")
+      .get("http://localhost:8080/api/v1/dashboard", {
+        headers: {
+          Authorization: `Bearer ${authtoken}`,
+        },
+      })
       .then((res) => {
         if (!res.data.success_jwt) {
-          console.log(res.data);
           navigate("/student/login");
-        }
-        else {
+        } else {
           setIsLoading(false);
         }
       })
       .catch((err) => {
-        console.log(err.request.response);
         if (!err.request.response.success_jwt) {
           navigate("/student/login");
-        }
-        else {
+        } else {
           setIsLoading(false);
         }
       });
@@ -45,20 +37,24 @@ function Dashboard() {
 
   useEffect(() => {
     checkAuth();
-  },[]);
+  }, []);
 
   console.log(isloading);
 
   return (
     <div>
-      {isloading && <h1>Loading...</h1>}
+      {isloading && <h1>.</h1>}
 
-      <div>
-      {!isloading && <div><h1>Welcome</h1>
-      <button onClick={handleLogout}>Logout</button></div>}
+      {!isloading && (
+        <div>
+          {" "}
+          <NavbarDash />
+          <div className="h-screen bg-slate-100 flex flex-col items-center">
+            <h1 className="text-3xl mt-5 font-bold mb-4">Welcome, Nikhil</h1>
+          </div>
+        </div>
+      )}
     </div>
-    </div>
-    
   );
 }
 

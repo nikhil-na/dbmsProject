@@ -11,7 +11,7 @@ export default function Navbar({ role }) {
             className="h-15 mr-3"
             alt="Flowbite Logo"
           />
-          <span className="self-center text-3xl font-bold whitespace-nowrap dark:text-white">
+          <span className="self-center text-3xl font-bold whitespace-nowrap dark:text-dark">
             Expense Tracker
           </span>
         </Link>

@@ -5,18 +5,18 @@ import { Link } from "react-router-dom";
 
 export default function LandingPage() {
   return (
-    <div className="h-screen bg-gradient-to-r from-blue-300 via-blue-300 to-blue-300">
+    <div className="h-screen bg-slate-300">
       <Navbar role="sign up" />
       <div className="">
         <div className="grid grid-rows-2 pt-52">
           <h1
-            className="text-5xl text-white text-center font-black"
+            className="text-5xl text-slate-900 text-center font-black"
             style={{ fontSize: "70px" }}
           >
             Control your finances with expense tracker
           </h1>
           <div
-            className="mt-10 text-white text-center font-black"
+            className="mt-10 text-slate-700 text-center font-black"
             style={{ fontSize: "40px" }}
           >
             Track your spending and set financial goals.{" "}

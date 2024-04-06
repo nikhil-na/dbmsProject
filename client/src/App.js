@@ -1,9 +1,13 @@
-import { BrowserRouter, Routes, Route, Navigate } from "react-router-dom";
+import { BrowserRouter, Routes, Route } from "react-router-dom";
 
 import LandingPage from "./components/landingPage";
 import Login from "./components/user/login";
 import Dashboard from "./components/dashboard";
 import Signup from "./components/user/signup";
+import ExpenseForm from "./components/forms/expenseForm";
+import IncomeForm from "./components/forms/incomeForm";
+import ExpenseListPage from "./components/pages/expensePage";
+import IncomeListPage from "./components/pages/incomePage";
 
 export default function App() {
   return (
@@ -13,6 +17,10 @@ export default function App() {
         <Route path="/dashboard" element={<Dashboard />} />
         <Route path="/student/login" element={<Login />} />
         <Route path="/student/signup" element={<Signup />} />
+        <Route path="/expense/new" element={<ExpenseForm />} />
+        <Route path="/income/new" element={<IncomeForm />} />
+        <Route path="/expenses" element={<ExpenseListPage />} />
+        <Route path="/income" element={<IncomeListPage />} />
       </Routes>
     </BrowserRouter>
   );
