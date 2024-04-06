@@ -46,7 +46,7 @@ export default function NavbarDash({ role }) {
   return (
     <nav>
       <div className="max-w-screen-xxl flex flex-wrap items-center justify-between p-4 bg-slate-50">
-        <Link to="/" className="flex items-center">
+        <Link to="/dashboard" className="flex items-center">
           <img
             src="https://img.icons8.com/?size=80&id=m1yuWcowVSGK&format=png"
             className="h-15 mr-3"
