@@ -102,7 +102,6 @@ function ExpenseListPage() {
       setDescription(expenseToEdit.description);
       setIsEditing(true);
       setEditExpenseId(expenseId); // Set the id of the expense being edited
-      setShowExpenseForm(true); // Show the expense form in edit mode
       setShowExpenseForm(!showExpenseForm);
     }
   };
@@ -112,9 +111,6 @@ function ExpenseListPage() {
     setShowExpenseForm(!showExpenseForm);
     setEditExpenseId(null);
   };
-
-  console.log(expenseList);
-
   return (
     <div className="h-screen">
       <NavbarDash />

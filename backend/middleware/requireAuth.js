@@ -4,7 +4,7 @@ const requireAuth = (req, res, next) => {
   const jwtoken = req.headers.authorization.split(" ")[1];
 
   if (!jwtoken) {
-    res.status(401).json({
+    res.status(200).json({
       success_jwt: false,
       message: "Login first",
     });
