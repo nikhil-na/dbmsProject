@@ -36,7 +36,7 @@ exports.loginUser = async (req, res, next) => {
     const sql = "SELECT * FROM USERS WHERE EMAIL = ?";
     const values = [email];
 
-    db.query(sql, values, (err, data) => {
+    db.query(sql, values, async (err, data) => {
       if (err) {
         res.status(500).json({
           error: "Failed to login",
@@ -51,7 +51,9 @@ exports.loginUser = async (req, res, next) => {
           });
         } else {
           const user = data[0];
-          if (comparePassword(password, user.PASSWORD)) {
+          console.log(user);
+          const result = await comparePassword(password, user.PASSWORD);
+          if (result) {
             sendTokenResponse({ user }, 200, res);
           } else {
             res.status(401).json({
