@@ -79,11 +79,31 @@ exports.logoutUser = (req, res, next) => {
   });
 };
 
+exports.getUser = (req, res) => {
+  const userId = req.user.userId;
+  const sql = `SELECT NAME FROM USERS WHERE USER_ID = ${userId}`;
+  db.query(sql, (err, data) => {
+    if (err) {
+      console.error("Error fetching user:", err);
+      res.status(500).json({ err: "Internal Server Error" });
+    } else {
+      if (data.length === 0) {
+        res.status(404).json({ err: "User not found" });
+      } else {
+        const userName = data[0].NAME;
+        console.log(userName);
+        res.status(200).json({ status: "Success", userName });
+      }
+    }
+  });
+};
+
 exports.getDashboard = (req, res, next) => {
+  console.log(req.user);
   res.status(200).json({
     success_jwt: true,
     status: "Success",
-    message: "Welcome to the dashboard!",
-    user: req.user, // Assuming req.user contains the authenticated user's information
+    message: "Welcome to the dashboard",
+    user: req.user,
   });
 };

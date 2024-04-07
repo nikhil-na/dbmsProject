@@ -6,6 +6,7 @@ const {
   getDashboard,
   registerUser,
   logoutUser,
+  getUser,
 } = require("../controllers/authController");
 const {
   getAllExpenses,
@@ -28,7 +29,8 @@ const requireAuth = require("../middleware/requireAuth");
 router.post("/student/signup", registerUser);
 router.post("/student/login", loginUser);
 router.get("/dashboard", requireAuth, getDashboard);
-router.get("/logout", logoutUser);
+router.get("/logout", requireAuth, logoutUser);
+router.get("/user", requireAuth, getUser);
 
 router.post("/expenses/new", requireAuth, newExpense);
 router.get("/expenses", requireAuth, getAllExpenses);

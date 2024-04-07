@@ -17,6 +17,7 @@ function ChartJs() {
   const [balance, setBalance] = useState(0);
   const [incomes, setIncomes] = useState([]);
   const [expenses, setExpenses] = useState([]);
+  const [userName, setUserName] = useState("");
 
   Chart.register(ArcElement);
 
@@ -55,6 +56,23 @@ function ChartJs() {
 
     fetchIncomeAndExpense();
   }, []); // TODO: ADD A DEPENENCY (USER) HERE
+
+  useEffect(() => {
+    const fetchUserName = async () => {
+      const authToken = localStorage.getItem("authtoken");
+      try {
+        const response = await axios.get("http://localhost:8080/api/v1/user", {
+          headers: {
+            Authorization: `Bearer ${authToken}`,
+          },
+        });
+        setUserName(response.data.userName);
+      } catch (err) {
+        console.log(err.message);
+      }
+    };
+    fetchUserName();
+  }, []);
 
   useEffect(() => {
     let totalIncome = 0;
@@ -116,7 +134,7 @@ function ChartJs() {
   return (
     <div className="container mx-auto">
       <h1 className="mb-10 mt-10 text-center text-3xl font-bold">
-        Welcome to your Dashboard!
+        Welcome to your Dashboard, {userName}!
       </h1>
 
       <div className="flex justify-center mt-5">
