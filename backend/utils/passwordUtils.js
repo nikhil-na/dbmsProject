@@ -11,10 +11,5 @@ exports.hashPassword = async (password) => {
 };
 
 exports.comparePassword = async (password, hashedPassword) => {
-  try {
-    const match = await bcrypt.compare(password, hashedPassword);
-    return match;
-  } catch (error) {
-    throw new Error("Password comparison failed");
-  }
+  return await bcrypt.compare(password, hashedPassword);
 };

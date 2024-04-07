@@ -10,6 +10,8 @@ export default function Login() {
     email: "",
     password: "",
   });
+  const [passwordFail, setPasswordFail] = useState("");
+  const [emailFail, setEmailFail] = useState("");
 
   const navigate = useNavigate();
   axios.defaults.withCredentials = true;
@@ -20,14 +22,26 @@ export default function Login() {
     axios
       .post("http://localhost:8080/api/v1/student/login", values)
       .then((res) => {
+        console.log("Response from server:", res.data); // Log res data
         if (res.data.status === "Success") {
           localStorage.setItem("authtoken", res.data.token);
           navigate("/dashboard");
         } else {
-          console.log("Error");
+          console.log("Error logging in");
         }
       })
-      .catch((err) => console.log(err));
+      .catch((error) => {
+        // console.log("Error");
+        if (error.response.data.error === "User not found") {
+          setEmailFail("User not found");
+          setPasswordFail("");
+        } else if (error.response.data.error === "Unauthorized") {
+          setEmailFail("");
+          setPasswordFail("Incorrect password");
+        } else {
+          console.log("Error");
+        }
+      });
   };
 
   return (
@@ -66,6 +80,7 @@ export default function Login() {
                     setValues({ ...values, email: e.target.value });
                   }}
                 />
+                {emailFail && <p className="text-red-700">{emailFail}</p>}
               </div>
             </div>
 
@@ -98,6 +113,7 @@ export default function Login() {
                     setValues({ ...values, password: e.target.value });
                   }}
                 />
+                {passwordFail && <p className="text-red-900">{passwordFail}</p>}
               </div>
             </div>
 
